@@ -1,9 +1,17 @@
 import datetime as dt
-import webcolors
 
+import webcolors
 from rest_framework import serializers
 
-from .models import Cat, Owner, Achievement
+from .models import Achievement, Cat, Owner
+
+CHOICES = (
+        ('Gray', 'Серый'),
+        ('Black', 'Чёрный'),
+        ('White', 'Белый'),
+        ('Ginger', 'Рыжий'),
+        ('Mixed', 'Смешанный'),
+    )
 
 
 class Hex2NameColor(serializers.Field):
@@ -39,6 +47,14 @@ class CatSerializer(serializers.ModelSerializer):
 
     def get_age(self, obj):
         return dt.datetime.now().year - obj.birth_year
+
+
+class CatListSerializer(serializers.ModelSerializer):
+    color = serializers.ChoiceField(choices=CHOICES)
+
+    class Meta:
+        model = Cat
+        fields = ('id', 'name', 'color')
 
 
 class OwnerSerializer(serializers.ModelSerializer):
